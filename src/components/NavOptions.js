@@ -33,11 +33,11 @@ const NavOptions = () =>
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity style={[tw`p-2`, styles.aic]} onPress={() => navigation.navigate(item.screen)}>
-                    <View style={[tw`bg-gray-200 w-40 p-2`, styles.b10, styles.jcc, styles.aic, styles.mr10]}>
-                        <Image style={[styles.h120, styles.w120, {resizeMode: "contain"}]}
+                    <View style={[tw`bg-gray-200 p-1`, styles.br10, styles.jcc, styles.aic, styles.mr10]}>
+                        <Image style={[styles.h100, styles.w120, {resizeMode: "contain"}]}
                             source={{uri: item.image}}/>
-                        <Text style={[tw`font-semibold pb-6`]}>{item.title}</Text>
-                        <Icon style={[tw`p-2, bg-black rounded-full w-10 mt-2`]}
+                        <Text style={[tw`font-semibold`]}>{item.title}</Text>
+                        <Icon style={[tw`p-2 bg-black rounded-full w-10 mt-3 mb-4`]}
                             name="arrowright" color="white" type="antdesign"/>
                         </View>
                     </TouchableOpacity>
