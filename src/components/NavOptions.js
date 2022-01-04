@@ -5,7 +5,7 @@ import tw from 'tailwind-react-native-classnames';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 
-const NavOptions = () =>
+const NavOptions = ({latitude, longitude}) =>
 {
     const navigation = useNavigation();
 
@@ -32,8 +32,8 @@ const NavOptions = () =>
                 scrollEnabled={false}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={[tw`p-2`, styles.aic]} onPress={() => navigation.navigate(item.screen)}>
-                    <View style={[tw`bg-gray-200 p-1`, styles.br10, styles.jcc, styles.aic, styles.mr10]}>
+                    <TouchableOpacity disabled={((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined))} style={[tw`p-2`, styles.aic]} onPress={() => navigation.navigate(item.screen)}>
+                    <View style={[tw`${((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined)) ? "bg-gray-50" : "bg-gray-200"} p-1`, styles.br10, styles.jcc, styles.aic, styles.mr10]}>
                         <Image style={[styles.h100, styles.w120, {resizeMode: "contain"}]}
                             source={{uri: item.image}}/>
                         <Text style={[tw`font-semibold`]}>{item.title}</Text>

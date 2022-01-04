@@ -5,6 +5,7 @@ import tw from 'tailwind-react-native-classnames';
 import Map from '../components/Map';
 import NavigateCard from '../components/NavigateCard';
 import RideOptions from '../components/RideOptions';
+import { styles } from '../styles';
 
 const MapScreen = () =>
 {

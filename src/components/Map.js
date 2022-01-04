@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import MapView, {Marker} from 'react-native-maps'
 import { styles } from '../styles'
 import { useSelector } from 'react-redux';
@@ -9,10 +9,22 @@ const Map = () =>
     const origin = useSelector(selectOrigin);
     const destination = useSelector(selectDestination);
 
-    console.log(origin, destination);
+    const mapRef = useRef(null);
+
+    useEffect(() =>
+    {
+        if (!origin || !destination) return;
+
+        //Map zoom and fit to markers
+        mapRef.current.fitToSuppliedMarkers(['origin', 'destination'],
+            {
+                edgePadding: { top: 50, bottom: 50, right: 50, left: 50 },
+            });
+    }, [origin, destination])
 
     return (
-        <MapView
+        origin?.lat !== null && (<MapView
+            ref={mapRef}
             style={[styles.flx1]}
             mapType="mutedStandard"
             initialRegion={{
@@ -22,7 +34,7 @@ const Map = () =>
                 longitudeDelta: 0.015,
             }} 
         >
-            {origin !== null && (<Marker
+            <Marker
                 coordinate={{
                     latitude: origin.lat,
                     longitude: origin.lng,
@@ -30,9 +42,9 @@ const Map = () =>
                 title='Origin'
                 description={origin.desc}
                 identifier='origin'
-            />)}
+            />
 
-            {destination !== null && (<Marker
+           {destination !== null && ( <Marker
                 coordinate={{
                     latitude: destination.lat,
                     longitude: destination.lng,
@@ -41,7 +53,7 @@ const Map = () =>
                 description={destination.desc}
                 identifier='destination'
             />)}
-        </MapView>
+        </MapView>)
     )
 }
 
