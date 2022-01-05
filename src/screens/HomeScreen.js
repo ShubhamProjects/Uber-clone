@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import { View, Image, PermissionsAndroid, Text } from 'react-native'
+import React, { useState } from 'react'
+import { View, Image, TouchableOpacity, Text } from 'react-native'
 import tw from 'tailwind-react-native-classnames';
 import NavOptions from '../components/NavOptions';
 import { styles } from '../styles';
 import { useDispatch } from 'react-redux';
 import { setDestination, setOrigin } from '../core/navSlice';
-import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
+import DeveloperInfoModal from '../components/DeveloperInfoModal';
 
 const HomeScreen = () =>
 {
-
-    //var watchId = null;
     const dispatch = useDispatch();
 
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
 
     const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const toggleModal = () =>
+    {
+        setIsModalVisible(!isModalVisible);
+    };
 
     //use below code when developing in expo-cli environment
     useFocusEffect(
@@ -29,7 +33,7 @@ const HomeScreen = () =>
                 let { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted')
                 {
-                    setErrorMsg('Permission to access location was denied');
+                    console.warn('Permission to access location was denied');
                 }
                 else
                 {
@@ -50,103 +54,6 @@ const HomeScreen = () =>
         return () => true;
         }, [location])
         );
-      
-    //Use below code when developing in react-native-cli environment
-    // useEffect(() =>
-    // {
-    //     const requestLocationPermission = async () =>
-    // {
-    //     try
-    //     {
-    //         const granted = await PermissionsAndroid.request(
-    //             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    //             {
-    //                 title: 'Uber-clone location permission',
-    //                 message: 'Uber-clone wants to access location for providing best service.',
-    //                 buttonPositive: "Ok",
-    //                 buttonNegative: "Cancel"
-    //             }
-    //         );
-    //         if (granted === PermissionsAndroid.RESULTS.GRANTED)
-    //         {
-    //             console.log('permission granted');
-    //             //getOneTimeLoation();
-    //             //trackLocation();
-    //             let loc = await Location.getCurrentPositionAsync({});
-    //             setLocation(loc);
-    //         }
-    //         else
-    //         {
-    //             console.log("Permission denied");
-    //         }
-    //     } catch (err)
-    //     {
-    //         console.warn(err);
-    //     }
-    //     };
-    //     requestLocationPermission();
-    //      return () =>
-    //      {
-    //          Geolocation.clearWatch(watchId);
-    //     // }
-    // }, [])
-
-    //const getOneTimeLoation = () =>
-    // {
-    //     Geolocation.getCurrentPosition(
-    //         (position) =>
-    //         {
-    //             console.log(position);
-    //             const lat = JSON.stringify(position.coords.latitude);
-    //             const lng = JSON.stringify(position.coords.longitude);
-
-    //             setLatitude(lat);
-    //             setLongitude(lng);
-                
-    //             dispatch(setOrigin({
-    //                 "lat": latitude,
-    //                 "lng": longitude,
-    //                 "desc": "You are here",
-    //             }))
-        
-    //             dispatch(setDestination(null))
-    //         },
-    //         (error) =>
-    //     {
-    //         console.log(error.code, error.message);
-    //     }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 1000 }
-    //     )
-    // };
-
-    // const trackLocation = () =>
-    // {
-    //     watchId = Geolocation.watchPosition(
-    //         (position) =>
-    //         {
-    //             const lat = JSON.stringify(position.coords.latitude);
-    //             const lng = JSON.stringify(position.coords.longitude);
-
-    //             setLatitude(lat);
-    //             setLongitude(lng);
-    //         },
-    //         (error) =>
-    //         {
-    //             console.log(error.code, error.message);
-    //         },
-    //         { enableHighAccuracy: false, timeout: 15000, maximumAge: 1000 }
-    //     );
-    // };
-
-    // useEffect(() =>
-    // {
-    //     dispatch(setOrigin({
-    //         "lat": latitude,
-    //         "lng": longitude,
-    //         "desc": "You are here",
-    //     }))
-
-    //     dispatch(setDestination(null))
-    // }, [latitude, longitude])
 
     return (
         <View style={[styles.flx1, tw`pt-8 bg-white`]}>
@@ -166,11 +73,16 @@ const HomeScreen = () =>
             }
             
             <View style={[styles.jcfe, styles.flx1, styles.p10, styles.aic]}>
+                <TouchableOpacity onPress={() => { toggleModal() }} style={[styles.aic]}>
                 <Text style={[tw`text-sm`]}>Powered by</Text>
                 <Image style={[tw`rounded-full h-16 w-16`]}
                     source={{ uri: "https://media-exp1.licdn.com/dms/image/C4E03AQFeBe16-WMwew/profile-displayphoto-shrink_800_800/0/1637319200346?e=1646870400&v=beta&t=OjDpWYL_poaxDBJCxVLMYDGkj7x1T7CYKC-dP7LoXSo" }}
-                />
+                    />
+                </TouchableOpacity>
             </View>
+            {isModalVisible === true && (
+                <DeveloperInfoModal toggleModal={toggleModal} isModalVisible={isModalVisible} />
+            )}
         </View>
     )
 }

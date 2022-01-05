@@ -55,8 +55,8 @@ const NavigateCard = ({ navigation }) =>
                     value={longitudeValue}
                     onChangeText={(longitude) => enteredLongitude(longitude)}
                 />
-                <TouchableOpacity disabled={latitudeValue === null || longitudeValue === null} onPress={() => onRideOptionsClick()}
-                style={[tw`h-16 w-10/12 rounded-md ${(latitudeValue === null || longitudeValue === null) ? "bg-gray-300" : "bg-black"}`, styles.aic, styles.jcc]}>
+                <TouchableOpacity disabled={((latitudeValue === null || latitudeValue === '') || (longitudeValue === null || longitudeValue === ''))} onPress={() => onRideOptionsClick()}
+                style={[tw`h-16 w-10/12 rounded-md ${((latitudeValue === null || latitudeValue === '') || (longitudeValue === null || longitudeValue === '')) ? "bg-gray-300" : "bg-black"}`, styles.aic, styles.jcc]}>
                     <Text style={[tw`text-white text-xl font-bold`]}>Lets Go!</Text>
                 </TouchableOpacity>
             </View>

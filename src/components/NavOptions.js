@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, Image, TouchableOpacity, Alert } from 'react-native'
 import { styles } from '../styles'
 import tw from 'tailwind-react-native-classnames';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +24,17 @@ const NavOptions = ({latitude, longitude}) =>
         }
     ]
 
+    const onOptionPress = (screen) =>
+    {
+        if (screen === 'Food Screen')
+        {
+            Alert.alert('Order Food', 'Functionality coming soon!');
+        } else
+        {
+            navigation.navigate('Map Screen');
+        }
+    }
+
     return (
         <View style={[tw`mt-10`]}>
             <FlatList
@@ -32,7 +43,8 @@ const NavOptions = ({latitude, longitude}) =>
                 scrollEnabled={false}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity disabled={((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined))} style={[tw`p-2`, styles.aic]} onPress={() => navigation.navigate(item.screen)}>
+                    <TouchableOpacity disabled={((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined))} style={[tw`p-2`, styles.aic]}
+                        onPress={() => onOptionPress(item.screen)}>
                     <View style={[tw`${((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined)) ? "bg-gray-50" : "bg-gray-200"} p-1`, styles.br10, styles.jcc, styles.aic, styles.mr10]}>
                         <Image style={[styles.h100, styles.w120, {resizeMode: "contain"}]}
                             source={{uri: item.image}}/>
