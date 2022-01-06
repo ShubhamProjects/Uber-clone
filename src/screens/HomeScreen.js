@@ -22,38 +22,42 @@ const HomeScreen = () =>
 
     const toggleModal = () =>
     {
-        setIsModalVisible(!isModalVisible);
+        setIsModalVisible(true);
     };
 
     //use below code when developing in expo-cli environment
-    useFocusEffect(
-    React.useCallback(() =>{
-            (async () =>
+        useFocusEffect(
+            React.useCallback(() =>
             {
-                let { status } = await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted')
+                setTimeout(() =>
                 {
-                    console.warn('Permission to access location was denied');
-                }
-                else
-                {
-                    let loc = await Location.getCurrentPositionAsync({});
-                    setLocation(loc);
-                }
-            })();
-            setLatitude(location?.coords?.latitude);
-            setLongitude(location?.coords?.longitude);
+                    (async () =>
+                    {
+                        let { status } = await Location.requestForegroundPermissionsAsync();
+                        if (status !== 'granted')
+                        {
+                            console.warn('Permission to access location was denied');
+                        }
+                        else
+                        {
+                            let loc = await Location.getCurrentPositionAsync({});
+                            setLocation(loc);
+                        }
+                    })();
+                    setLatitude(location?.coords?.latitude);
+                    setLongitude(location?.coords?.longitude);
     
-            dispatch(setOrigin({
-                "lat": latitude,
-                "lng": longitude,
-                "desc": "You are here!",
-            }))
+                    dispatch(setOrigin({
+                        "lat": latitude,
+                        "lng": longitude,
+                        "desc": "You are here!",
+                    }))
     
-        dispatch(setDestination(null))
-        return () => true;
-        }, [location])
-        );
+                    dispatch(setDestination(null))
+                    return () => true;
+                }, 5000)
+            }, [location])
+        )
 
     return (
         <View style={[styles.flx1, tw`pt-8 bg-white`]}>
@@ -73,7 +77,7 @@ const HomeScreen = () =>
             }
             
             <View style={[styles.jcfe, styles.flx1, styles.p10, styles.aic]}>
-                <TouchableOpacity onPress={() => { toggleModal() }} style={[styles.aic]}>
+                <TouchableOpacity onPress={() =>  toggleModal()} style={[styles.aic]}>
                 <Text style={[tw`text-sm`]}>Powered by</Text>
                 <Image style={[tw`rounded-full h-16 w-16`]}
                     source={{ uri: "https://media-exp1.licdn.com/dms/image/C4E03AQFeBe16-WMwew/profile-displayphoto-shrink_800_800/0/1637319200346?e=1646870400&v=beta&t=OjDpWYL_poaxDBJCxVLMYDGkj7x1T7CYKC-dP7LoXSo" }}
@@ -81,7 +85,7 @@ const HomeScreen = () =>
                 </TouchableOpacity>
             </View>
             {isModalVisible === true && (
-                <DeveloperInfoModal toggleModal={toggleModal} isModalVisible={isModalVisible} />
+                <DeveloperInfoModal toggleModal={setIsModalVisible} isModalVisible={isModalVisible} />
             )}
         </View>
     )

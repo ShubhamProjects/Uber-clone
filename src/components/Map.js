@@ -34,7 +34,7 @@ const Map = () =>
                 longitudeDelta: 0.015,
             }} 
         >
-            <Marker
+            {origin !== null && (<Marker
                 coordinate={{
                     latitude: origin.lat,
                     longitude: origin.lng,
@@ -42,7 +42,7 @@ const Map = () =>
                 title='Origin'
                 description={origin.desc}
                 identifier='origin'
-            />
+            />)}
 
            {destination !== null && ( <Marker
                 coordinate={{

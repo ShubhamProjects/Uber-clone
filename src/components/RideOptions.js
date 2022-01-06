@@ -4,6 +4,7 @@ import tw from 'tailwind-react-native-classnames'
 import { styles } from '../styles'
 import { selectDestination, selectOrigin } from '../core/navSlice';
 import { useSelector } from 'react-redux';
+import { Icon } from 'react-native-elements';
 
 const Rides = [
     {
@@ -26,12 +27,13 @@ const Rides = [
     }
 ];
 
-const RideOptions = () =>
+const RideOptions = ({navigation}) =>
 {
     const origin = useSelector(selectOrigin);
     const destination = useSelector(selectDestination);
 
     const [selectedRide, setSelectedRide] = useState(null);
+    const [bookRide, setBookRide] = useState(false);
 
     const deg2rad = (deg) =>
     {
@@ -52,13 +54,47 @@ const RideOptions = () =>
 
     const fareCalculator = (item) =>
     {
-        return parseFloat(18 * distanceCalculator() * item.multiplier).toFixed(2);
+        var count = 0;
+        
+        if (distanceCalculator() <= 4)
+        {
+            if (item.id === 'Uber-X')
+            {
+                count = 100;
+            } else if (item.id === 'Uber-XL')
+            {
+                count = 120;
+            } else if (item.id === 'Uber-LUX')
+            {
+                count = 150;
+            }   
+        } else
+        {
+            if (item.id === 'Uber-X')
+            {
+                count = ((distanceCalculator() - 4) * 42) + 100;
+            } else if (item.id === 'Uber-XL')
+            {
+                count = ((distanceCalculator() - 4) * 48) + 120;
+            } else if (item.id === 'Uber-LUX')
+            {
+                count = ((distanceCalculator() - 4) * 54) + 150;
+            }   
+        }
+
+        return parseFloat(18 * distanceCalculator() * item.multiplier + count).toFixed(2);
     };
 
     return (
         <View style={[styles.flx1, styles.bgWhite]}>
-            <View style={[styles.m6, styles.aic]}>
-                <Text style={[tw`text-xl`]}>Select a Ride</Text>
+            <View style={[styles.m6]}>
+                <View style={[tw`w-2/3`, styles.flxr, styles.aic, styles.jcsb]}>
+                    <TouchableOpacity onPress={()=> navigation.goBack()}>
+                    <Icon style={[tw`w-10 mt-3 mb-4`]}
+                            name="arrowleft" color="black" type="antdesign" />
+                    </TouchableOpacity>
+                    <Text style={[tw`text-xl`]}>Select a Ride</Text>
+                </View>
             </View>
             <View style={[styles.flx1]}>
             <FlatList
@@ -78,7 +114,7 @@ const RideOptions = () =>
                 />
             </View>
             
-            <TouchableOpacity style={[tw`rounded-md`, styles.aic, styles.flx0_2, styles.jcc, styles.bgBlack, styles.m10]}>
+            <TouchableOpacity disabled={!selectedRide} onPress={() => setBookRide(true)} style={[tw`rounded-md ${!selectedRide ? 'bg-gray-300' : 'bg-black'}`, styles.aic, styles.flx0_2, styles.jcc, styles.m10]}>
                 <Text style={[tw`text-white text-lg`]}>{`Your ride is ${ selectedRide === null ? '...' : selectedRide}`}</Text>
             </TouchableOpacity>
         </View>
