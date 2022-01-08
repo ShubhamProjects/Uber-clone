@@ -8,6 +8,7 @@ import { setDestination, setOrigin } from '../core/navSlice';
 import * as Location from 'expo-location';
 import { useFocusEffect } from '@react-navigation/native';
 import DeveloperInfoModal from '../components/DeveloperInfoModal';
+import UberLogo from '../../assets/UberLogo.png';
 
 const HomeScreen = () =>
 {
@@ -20,6 +21,8 @@ const HomeScreen = () =>
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
+    const [fetchLocation, setFetchLocation] = useState(true);
+
     const toggleModal = () =>
     {
         setIsModalVisible(true);
@@ -29,8 +32,6 @@ const HomeScreen = () =>
         useFocusEffect(
             React.useCallback(() =>
             {
-                setTimeout(() =>
-                {
                     (async () =>
                     {
                         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,24 +56,38 @@ const HomeScreen = () =>
     
                     dispatch(setDestination(null))
                     return () => true;
-                }, 5000)
             }, [location])
         )
+
+    const FetchingLocation = () =>
+    {
+        return(
+        <View style={[styles.flx1,styles.aic, styles.jcc]}>
+            <Text>Fetching your location!!!</Text>
+        </View>
+        )
+    }
+
+    if ((latitude === null || latitude === undefined) && (longitude === null || longitude === undefined))
+    {
+        setTimeout(() =>
+        {
+            setFetchLocation(!fetchLocation);
+        }, 800)
+    }
 
     return (
         <View style={[styles.flx1, tw`pt-8 bg-white`]}>
             <View style={[styles.pl4]}>
                 <Image style={[styles.h80, styles.w_30]}
-                    source={{ uri: "https://logos-world.net/wp-content/uploads/2020/05/Uber-Emblem.png" }}
+                    source={UberLogo}
                 />
             </View>
 
             <NavOptions latitude={latitude} longitude={longitude} />
             
-            {((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined)) && (
-                <View style={[styles.flx1,styles.aic, styles.jcc]}>
-                    <Text>Fetching your location!!!</Text>
-                </View>
+            {((latitude === null || latitude === undefined) && (longitude === null || longitude === undefined) && (fetchLocation === true)) && (
+                <FetchingLocation/>
             )
             }
             

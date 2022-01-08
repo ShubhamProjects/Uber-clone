@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
-import tw from 'tailwind-react-native-classnames'
-import { styles } from '../styles'
 import { selectDestination, selectOrigin } from '../core/navSlice';
 import { useSelector } from 'react-redux';
+import tw from 'tailwind-react-native-classnames'
+import { styles } from '../styles'
 import { Icon } from 'react-native-elements';
+import { fareCalculator, distanceCalculator, amountBalanceFormat } from '../../Utility/CommonFunctions';
 
 const Rides = [
     {
@@ -32,59 +33,14 @@ const RideOptions = ({navigation}) =>
     const origin = useSelector(selectOrigin);
     const destination = useSelector(selectDestination);
 
+
     const [selectedRide, setSelectedRide] = useState(null);
-    const [bookRide, setBookRide] = useState(false);
 
-    const deg2rad = (deg) =>
+    const congratulationScreen = () =>
     {
-        return deg * (Math.PI / 180)
-    };
-
-    const distanceCalculator = () =>
-    {
-        let R = 6371; // Radius of the earth in km
-        let dLat = deg2rad(destination.lat - origin.lat);  // deg2rad 
-        let dLon = deg2rad(destination.lng - origin.lng);
-        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(origin.lat)) * Math.cos(deg2rad(destination.lat)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return parseFloat(R * c).toFixed(2); // Distance in km
-    };
-
-    const fareCalculator = (item) =>
-    {
-        var count = 0;
-        
-        if (distanceCalculator() <= 4)
-        {
-            if (item.id === 'Uber-X')
-            {
-                count = 100;
-            } else if (item.id === 'Uber-XL')
-            {
-                count = 120;
-            } else if (item.id === 'Uber-LUX')
-            {
-                count = 150;
-            }   
-        } else
-        {
-            if (item.id === 'Uber-X')
-            {
-                count = ((distanceCalculator() - 4) * 42) + 100;
-            } else if (item.id === 'Uber-XL')
-            {
-                count = ((distanceCalculator() - 4) * 48) + 120;
-            } else if (item.id === 'Uber-LUX')
-            {
-                count = ((distanceCalculator() - 4) * 54) + 150;
-            }   
-        }
-
-        return parseFloat(18 * distanceCalculator() * item.multiplier + count).toFixed(2);
-    };
-
+        navigation.navigate('CongratulationScreen');
+    }
+    
     return (
         <View style={[styles.flx1, styles.bgWhite]}>
             <View style={[styles.m6]}>
@@ -107,14 +63,14 @@ const RideOptions = ({navigation}) =>
                             <Image style={[tw`h-16 w-20 `]} source={{uri: item.image}} />
                             <Text style={[styles.pb3]}>{ item.title }</Text>
                         </View>
-                        <Text>{`${distanceCalculator()} km away`}</Text>
-                        <Text>{`₹ ${fareCalculator(item)}`}</Text>
+                        <Text>{`${distanceCalculator(origin, destination)} km away`}</Text>
+                        <Text>{`₹ ${amountBalanceFormat(fareCalculator(item, origin, destination))}`}</Text>
                     </TouchableOpacity>
                 )}
                 />
             </View>
             
-            <TouchableOpacity disabled={!selectedRide} onPress={() => setBookRide(true)} style={[tw`rounded-md ${!selectedRide ? 'bg-gray-300' : 'bg-black'}`, styles.aic, styles.flx0_2, styles.jcc, styles.m10]}>
+            <TouchableOpacity disabled={!selectedRide} onPress={() => congratulationScreen()} style={[tw`rounded-md ${!selectedRide ? 'bg-gray-300' : 'bg-black'}`, styles.aic, styles.flx0_2, styles.jcc, styles.m10]}>
                 <Text style={[tw`text-white text-lg`]}>{`Your ride is ${ selectedRide === null ? '...' : selectedRide}`}</Text>
             </TouchableOpacity>
         </View>

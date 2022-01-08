@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
+import CongatulationsRideBooked from './CongatulationsRideBooked';
 import Map from '../components/Map';
-import NavigateCard from '../components/NavigateCard';
-import RideOptions from '../components/RideOptions';
-import { styles } from '../styles';
+import NavigateCard from './NavigateCard';
+import RideOptions from './RideOptions';
 
 const MapScreen = () =>
 {
@@ -28,6 +28,11 @@ const MapScreen = () =>
                     <Stack.Screen
                         name="RideOptions"
                         component={RideOptions}
+                        options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                        name="CongratulationScreen"
+                        component={CongatulationsRideBooked}
                         options={{headerShown: false}}
                     />
                 </Stack.Navigator>

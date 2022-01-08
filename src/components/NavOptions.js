@@ -43,9 +43,9 @@ const NavOptions = ({latitude, longitude}) =>
                 scrollEnabled={false}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity disabled={((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined))} style={[tw`p-2`, styles.aic]}
+                    <TouchableOpacity disabled={((latitude === null || latitude === undefined) && (longitude === null || longitude === undefined))} style={[tw`p-2`, styles.aic]}
                         onPress={() => onOptionPress(item.screen)}>
-                    <View style={[tw`${((latitude === null || latitude === undefined) || (longitude === null || longitude === undefined)) ? "bg-gray-50" : "bg-gray-200"} p-1`, styles.br10, styles.jcc, styles.aic, styles.mr10]}>
+                    <View style={[tw`${((latitude === null || latitude === undefined) && (longitude === null || longitude === undefined)) ? "bg-gray-50" : "bg-gray-200"} p-1`, styles.br10, styles.jcc, styles.aic, styles.mr10]}>
                         <Image style={[styles.h100, styles.w120, {resizeMode: "contain"}]}
                             source={{uri: item.image}}/>
                         <Text style={[tw`font-semibold`]}>{item.title}</Text>
