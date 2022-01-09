@@ -4,9 +4,9 @@
     "slug": "Uber-clone",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/white-UberLogo.png",
+    "icon": "./assets/UberLogoIcon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/UberLogoIcon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,17 +17,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.shubham.uberClone",
+      "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "uber.clone",
+      "package": "com.shubham.uberClone",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/UberLogoIcon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/UberLogoIcon.png"
     }
   }
 }
